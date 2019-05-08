@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+//change
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
