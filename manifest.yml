@@ -10,5 +10,4 @@ applications:
   memory: 750M
   services: 
      - userdbservice
-     - log-drain
-     - newrelic
+     - cloud-config-server

@@ -2,7 +2,9 @@
  * Copyright (c) HCL PCF TEAM ,2019
  */
 package com.hcl.cloud.user.constant;
- 
+
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * com.hcl.cloud.user.constant. abhishek_sin
  */
@@ -22,23 +24,28 @@ public class UserConstant {
     /**
      * MESSAGE.
      */
-    public final static String MESSAGE = "USER CREATED SUCCESSFULLY !!!";
+    @Value("${user.create.successmsg}")
+    public final static String MESSAGE = null/* "USER CREATED SUCCESSFULLY !!!"*/;
     /**
      * UPDATE_MESSAGE.
      */
-    public final static String UPDATE_MESSAGE = "USER UPDATED SUCCESSFULLY !!!";
+    @Value("${user.update.successmsg}")
+    public final static String UPDATE_MESSAGE = null/*"USER UPDATED SUCCESSFULLY !!!"*/;
     /**
      * UPDATE_MESSAGE.
      */
-    public final static String DELETE_MESSAGE = "USER DELETE SUCCESSFULLY !!!";
+    @Value("${user.delete.successmsg}")
+    public final static String DELETE_MESSAGE = null;/*"USER DELETE SUCCESSFULLY !!!"*/;
     /**
      * UPDATE_MESSAGE.
      */
-    public final static String UPDATE_MESSAGE_ERROR = "USER DOES NOT EXIST !!!";
+    @Value("${user.notfound.msg}")
+    public final static String UPDATE_MESSAGE_ERROR = null/*"USER DOES NOT EXIST !!!"*/;
     /**
      * ERROR_MESSAGE.
      */
-    public final static String ERROR_MESSAGE = "USER ALREADY EXIST WITH SAME EMAILID  !!!";
+    @Value("${user.already.msg}")
+    public final static String ERROR_MESSAGE = null/*"USER ALREADY EXIST WITH SAME EMAILID  !!!"*/;
 
     UserConstant() { }
 }
