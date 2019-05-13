@@ -12,3 +12,4 @@ applications:
      - userdbservice
      - cloud-config-server
      - appdynamics
+     - log-drain
