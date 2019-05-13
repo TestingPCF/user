@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +29,8 @@ import com.hcl.cloud.user.service.UserService;
  * @author abhishek_sin
  *
  */
+@RefreshScope
 @RestController
-//@RequestMapping(value = "/api/user-management/")
 public class UserController {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -37,6 +39,19 @@ public class UserController {
      */
     @Autowired
     public UserService userService;
+    
+    @Value("${user.create.successmsg}")
+    private  String MESSAGE;
+    
+    @Value("${user.update.successmsg}")
+    private  String UPDATE_MESSAGE;
+    
+    @Value("${user.delete.successmsg}")
+    private  String DELETE_MESSAGE;
+    
+    @Value("${user.notfound.msg}")
+    private  String UPDATE_MESSAGE_ERROR;
+
 
     /**
      *
@@ -51,7 +66,7 @@ public class UserController {
             logger.info("User Request is received for Registration: ");
         }
         userService.saveUser(user);
-        return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(),UserConstant.MESSAGE ),HttpStatus.CREATED);
+        return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(),MESSAGE ),HttpStatus.CREATED);
     }
 
     /**
@@ -73,9 +88,9 @@ public class UserController {
         if (userUpdate!=null) {
         
         logger.debug("User detail updated succesfully for : " + userUpdate.getEmail());
-        return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),UserConstant.UPDATE_MESSAGE ),HttpStatus.OK);
+        return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),UPDATE_MESSAGE ),HttpStatus.OK);
         } else {
-        	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UserConstant.UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
+        	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
         }
     }
 
@@ -115,9 +130,9 @@ public class UserController {
         if (message!=null) {
             
             logger.debug("User deleted succesfully for : " + userid);
-            return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),UserConstant.DELETE_MESSAGE ),HttpStatus.OK);
+            return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),DELETE_MESSAGE ),HttpStatus.OK);
             } else {
-            	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UserConstant.UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
+            	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
             }
     }
 

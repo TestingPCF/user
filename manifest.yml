@@ -11,3 +11,4 @@ applications:
   services: 
      - userdbservice
      - cloud-config-server
+	 - appdynamics

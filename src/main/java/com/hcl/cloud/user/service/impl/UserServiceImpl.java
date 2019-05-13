@@ -234,14 +234,43 @@ public class UserServiceImpl implements UserService {
         final String userRole = userRepository.findUserRoleById(emailID);
         if (UserConstant.ADMINROLE.equalsIgnoreCase(userRole)) {
             userList = userRepository.findAll();
-            dtos = translateUserDetails(userList);
+            dtos = translateUserDetailsForOrder(userList);
         } else if (UserConstant.USERROLE.equalsIgnoreCase(userRole)) {
             user = findUserDetailsByID(emailID);
             userList.add(user);
-            dtos = translateUserDetails(userList);
+            dtos = translateUserDetailsForOrder(userList);
         }
         return dtos;
     }
+    
+    /**
+    *
+    * translateDTO
+    *
+    * @param userDTO
+    *            for translateDTO.
+    * @param user
+    *            for List.
+    * @return for user DTO.
+    */
+   public List<UserDTO> translateUserDetailsForOrder(List<User> users) {
+       LOG.debug("Enter translateDTO method: " + users);
+       final UserDTO dto = new UserDTO();
+       final List<UserDTO> userDTOs = new ArrayList<>();
+       for (final User user : users) {
+           dto.setUserName(user.getUserName());
+           dto.setEmail(user.getEmail());
+           dto.setFirstName(user.getFirstName());
+           dto.setLastName(user.getLastName());
+           dto.setPhoneNumber(user.getPhoneNumber());
+           dto.setUserAddress(translateAddress(user.getUserAddress()));
+           dto.setActive_user(user.isActive_user());
+           //dto.setPassword(user.getPassword());
+           userDTOs.add(dto);
+       }
+       return userDTOs;
+   }
+
 
     /**
      * getUserIDFromAccessToken
@@ -250,7 +279,7 @@ public class UserServiceImpl implements UserService {
     	RestTemplate restTemplate = new RestTemplate();
     	ResponseEntity<String> response =  null;
     	TokenResponse userid = null;
-        final String url = "http://uaa.apps.cnpsandbox.dryice01.in.hclcnlabs.com/uaa/tokenInfo";
+        final String url = "http://uaa.apps.sandbox.cflab01.in.hclcnlabs.com/tokenInfo";
        try
        {
         LOG.info("Requesting user detail from UAA for :::::::: "+accessToken);
