@@ -96,6 +96,7 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-sleuth</artifactId>
+			<version>${spring-cloud-services.version}</version>
 		</dependency>
 	</dependencies>
 
