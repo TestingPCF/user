@@ -13,3 +13,4 @@ applications:
      - cloud-config-server
      - appdynamics
      - log-drain
+     - newrelic
