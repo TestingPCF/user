@@ -7,9 +7,9 @@ applications:
   env: 
    ROSTER_A: Value_1
   instances: 1
-  memory: 750M
+  memory: 2G
   services: 
      - userdbservice
      - cloud-config-server
      - log-drain
-     - appdynamics
+     - newrelic
