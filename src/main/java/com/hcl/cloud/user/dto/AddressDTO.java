@@ -1,4 +1,4 @@
-package com.hcl.cloud.user.DTO;
+package com.hcl.cloud.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

@@ -28,17 +28,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hcl.cloud.user.DTO.AddressDTO;
-import com.hcl.cloud.user.DTO.UserDTO;
 import com.hcl.cloud.user.constant.TokenResponse;
 import com.hcl.cloud.user.constant.UserConstant;
+import com.hcl.cloud.user.dto.AddressDTO;
+import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.Address;
 import com.hcl.cloud.user.entity.User;
 import com.hcl.cloud.user.repository.UserRepository;
 import com.hcl.cloud.user.service.UserService;;
 
 /**
- * UserServiceImpl TODO
+ * @author Dinesh Sharma 
+ *
  */
 @Service
 @RefreshScope
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         return user;
-    }
+    } /* END HERE */
 
     /**
      *
@@ -93,11 +94,11 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
         }
         return user;
-    }
+    } /* END HERE */
 
     /**
      *
-     * translateDTO
+     * translateDTO to user object
      *
      * @param userDTO
      *            for translateDTO.
@@ -123,11 +124,11 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setUserAddress(set);
         return user;
-    }
+    } /* END HERE */
 
     /**
      *
-     * translateDTO
+     * Translate list of user to list of UserDTO
      *
      * @param userDTO
      *            for translateDTO.
@@ -151,7 +152,7 @@ public class UserServiceImpl implements UserService {
             userDTOs.add(dto);
         }
         return userDTOs;
-    }
+    } /* END HERE */
 
     /**
      *
@@ -177,7 +178,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return addressSet;
-    }
+    } /* END HERE */
 
     /**
      *
@@ -201,7 +202,7 @@ public class UserServiceImpl implements UserService {
             addressList.add(addressDto);
         }
         return addressList;
-    }
+    } /* END HERE */
 
     /**
      *
@@ -221,7 +222,7 @@ public class UserServiceImpl implements UserService {
         	return null;
         }
         return "delete successfully";
-    }
+    } /* END HERE */
 
     /**
      *
@@ -236,18 +237,21 @@ public class UserServiceImpl implements UserService {
         List<User> userList = new ArrayList<>();
         List<UserDTO> dtos = null;
         LOG.info("Request received for  accessToken:::::::: "+accessToken);
+        
         final String emailID = getUserIDFromAccessToken(accessToken);
         final String userRole = userRepository.findUserRoleById(emailID);
         if (UserConstant.ADMINROLE.equalsIgnoreCase(userRole)) {
             userList = userRepository.findAll();
             dtos = translateUserDetailsForOrder(userList);
-        } else if (UserConstant.USERROLE.equalsIgnoreCase(userRole)) {
+        } 
+         else if (UserConstant.USERROLE.equalsIgnoreCase(userRole)) {
             user = findUserDetailsByID(emailID);
             userList.add(user);
             dtos = translateUserDetailsForOrder(userList);
         }
         return dtos;
-    }
+    } /* END HERE */
+    
     
     /**
     *
@@ -271,7 +275,6 @@ public class UserServiceImpl implements UserService {
            dto.setPhoneNumber(user.getPhoneNumber());
            dto.setUserAddress(translateAddress(user.getUserAddress()));
            dto.setActive_user(user.isActive_user());
-           //dto.setPassword(user.getPassword());
            userDTOs.add(dto);
        }
        return userDTOs;
@@ -285,7 +288,6 @@ public class UserServiceImpl implements UserService {
     	RestTemplate restTemplate = new RestTemplate();
     	ResponseEntity<String> response =  null;
     	TokenResponse userid = null;
-      //  url = "http://uaa.apps.sandbox.cflab01.in.hclcnlabs.com/tokenInfo";
        try
        {
         LOG.info("Requesting user detail from UAA for :::::::: "+accessToken);
@@ -302,9 +304,7 @@ public class UserServiceImpl implements UserService {
        } catch (Exception e) {
     	   LOG.info("Exception occure on calling of UAA ::: "+e.getCause());
        }
-        //final String userID = "dinesh@hcl.com";
         return userid.getUserId();
-        
 
     }
 

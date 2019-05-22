@@ -9,30 +9,26 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.hcl.cloud.user.DTO.AddressDTO;
-import com.hcl.cloud.user.DTO.UserDTO;
 import com.hcl.cloud.user.constant.UserConstantTest;
+import com.hcl.cloud.user.dto.AddressDTO;
+import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.Address;
 import com.hcl.cloud.user.entity.User;
 import com.hcl.cloud.user.repository.UserRepository;
 import com.hcl.cloud.user.service.impl.UserServiceImpl;
-
 import junit.framework.Assert;
 
 /**
- * com.user.usermodule.service abhishek_sin
+ * com.user.usermodule.service Dinesh Sharma
  */
 @PrepareForTest({ UserServiceImpl.class, User.class, Address.class, AddressDTO.class, UserDTO.class})
 public class UserServiceImplTest {
@@ -76,51 +72,10 @@ public class UserServiceImplTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
+	
 	/**
-	 * saveUserdetailsTest
-	 *//*
-	@Test
-	public void saveUserdetailsUpdateTest() {
-		AddressDTO addressDTOMock = PowerMockito.mock(AddressDTO.class);
-		UserDTO userDTOMock = PowerMockito.mock(UserDTO.class);
-		Mockito.when(addressDTOMock.getAddress()).thenReturn(UserConstantTest.ADDRESS);
-		Mockito.when(addressDTOMock.getCity()).thenReturn(UserConstantTest.CITY);
-		Mockito.when(addressDTOMock.getCountry()).thenReturn(UserConstantTest.COUNTRY);
-		Mockito.when(addressDTOMock.getPincode()).thenReturn(UserConstantTest.PINCODE);
-		Mockito.when(addressDTOMock.getState()).thenReturn(UserConstantTest.STATE);
-		Mockito.when(addressDTOMock.getAddressType()).thenReturn(UserConstantTest.BILLING);
-		AddressDTO addressDTO = new AddressDTO();
-		addressDTO.setAddress(UserConstantTest.ADDRESS);
-		addressDTO.setCity(UserConstantTest.CITY);
-		addressDTO.setCountry(UserConstantTest.COUNTRY);
-		addressDTO.setPincode(UserConstantTest.PINCODE);
-		addressDTO.setState(UserConstantTest.STATE);
-		addressDTO.setAddressType(UserConstantTest.BILLING);
-		UserDTO userDTO = new UserDTO();
-		List<AddressDTO> addDTOList = new ArrayList<>();
-		addDTOList.add(addressDTO);
-		userDTO.setFirstName(UserConstantTest.FIRSTNAME);
-		userDTO.setLastName(UserConstantTest.LASTNAME);
-		userDTO.setPassword(UserConstantTest.PASSWORD);
-		userDTO.setPhoneNumber(UserConstantTest.PHONENUMBAR);
-		userDTO.setUserName(UserConstantTest.USERNAME);
-		userDTO.setEmail(UserConstantTest.EMAIL);
-		// userDTO.setActive_user(true);
-		userDTO.setUserAddress(addDTOList);
-
-		Mockito.when(userDTOMock.getUserName()).thenReturn(UserConstantTest.USERNAME);
-		Mockito.when(userDTOMock.getEmail()).thenReturn(UserConstantTest.EMAIL);
-		Mockito.when(userDTOMock.getUserAddress()).thenReturn(addDTOList);
-		Mockito.when(userDTOMock.getFirstName()).thenReturn(UserConstantTest.FIRSTNAME);
-		Mockito.when(userDTOMock.getLastName()).thenReturn(UserConstantTest.LASTNAME);
-		Mockito.when(userRepositoryMock.save(userMock)).thenReturn(userMock);
-		Mockito.when(modelMapperMock.map(userMock, UserDTO.class)).thenReturn(userDTOMock);
-		Mockito.when(userDTOMock.getUserAddress()).thenReturn(addDTOList);
-		userServiceImplMock.updateUser(userDTO);
-	}
-*/
-	/**
-	 * saveUserdetailsFailTest
+	 * @method saveUserdetailsSuccessTest
+	 * Test case for saving User
 	 */
 
 	@Test
@@ -158,7 +113,8 @@ public class UserServiceImplTest {
 	}
 
 	/**
-	 * updateUserdetailsTest
+	 * @method updateUserdetailsTest
+	 * Test case for updating User
 	 */
 
 	@Test
@@ -197,7 +153,8 @@ public class UserServiceImplTest {
 	}
 
 	/**
-	 * deleteUserdetailsTest
+	 * @method deleteUserdetailsTest
+	 * Test case for deleting User
 	 */
 	@Test
 	public void deleteUserdetailsTest() {
@@ -210,15 +167,12 @@ public class UserServiceImplTest {
 		userServiceImpl.deleteUser(UserConstantTest.USERNAME);
 	}
 
-	/**
-	 * deleteUserdetailsFailTest
-	 */
-	/*@Test
-	findUserRoleByIDTest
-	}*/
+
 
 	/**
-	 * findUserRoleByID
+	 *	@method findUserRoleByID
+	 *	Test case for reterving list of user
+	 *	by role User
 	 */
 	@Test(expected=NullPointerException.class)
 	public void findUserRoleByIDTest() {

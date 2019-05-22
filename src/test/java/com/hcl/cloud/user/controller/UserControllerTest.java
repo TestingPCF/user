@@ -15,8 +15,8 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.hcl.cloud.user.DTO.UserDTO;
 import com.hcl.cloud.user.constant.UserConstantTest;
+import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.User;
 import com.hcl.cloud.user.service.UserService;
 
@@ -28,9 +28,6 @@ import com.hcl.cloud.user.service.UserService;
 @RunWith(value = PowerMockRunner.class)
 public class UserControllerTest {
 
-	/**
-	 * UserDTO
-	 */
 	@Mock
 	private UserDTO userDTOMock;
 	/**

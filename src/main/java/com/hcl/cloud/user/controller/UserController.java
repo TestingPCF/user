@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hcl.cloud.user.DTO.UserDTO;
-import com.hcl.cloud.user.constant.UserConstant;
 import com.hcl.cloud.user.constant.UserResponseEntity;
+import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.User;
 import com.hcl.cloud.user.service.UserService;
 
 /**
- * @author abhishek_sin
+ * @author Dinesh Sharma and abhishek_sin 
  *
  */
 @RefreshScope
@@ -34,9 +33,11 @@ import com.hcl.cloud.user.service.UserService;
 public class UserController {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UserController.class);
+    
     /**
-     * userService.
+     * DECLARATION OF VARIABLE.
      */
+    
     @Autowired
     public UserService userService;
     
@@ -55,19 +56,20 @@ public class UserController {
 
     /**
      *
-     * saveUserDetails.
+     * saveUserDetails is use for user registration
      *
      * @param user
      *            for save user details in DB.
      */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<UserResponseEntity> saveUserDetails(@RequestBody UserDTO user) {
-        if (logger.isInfoEnabled()) {
+        
+    	if (logger.isInfoEnabled()) {
             logger.info("User Request is received for Registration: ");
         }
         userService.saveUser(user);
         return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(),MESSAGE ),HttpStatus.CREATED);
-    }
+    } /*END HERE*/
 
     /**
      * updateUserDetails method are updating user details.
@@ -78,8 +80,7 @@ public class UserController {
      * @throws NotFoundException
      */
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<UserResponseEntity> updateUserDetails(@RequestBody UserDTO user/*,
-            @RequestHeader(value = "accessToken", required = true) String accessToken*/) {
+    public ResponseEntity<UserResponseEntity> updateUserDetails(@RequestBody UserDTO user) {
     	
     	if (logger.isInfoEnabled()) {
             logger.info("User Request is received for User Update :::::: "+user.getEmail());
@@ -92,7 +93,7 @@ public class UserController {
         } else {
         	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
         }
-    }
+    } /*END HERE*/
 
     /**
      * getAllUserDetails method are fetching all user details.
@@ -107,7 +108,7 @@ public class UserController {
 
         final List<UserDTO> userDetails = userService.findUserRoleByID(accessToken);
         return new ResponseEntity<>(userDetails, HttpStatus.OK);
-    }
+    } /*END HERE*/
 
     /**
      * deleteUserDetailsByID method are soft deleting user details Change the user.
@@ -125,15 +126,17 @@ public class UserController {
         if (logger.isInfoEnabled()) {
             logger.info("User Request is received for User Update :::::: "+userid);
         }
+        
         message = userService.deleteUser(userid);
         
         if (message!=null) {
             
             logger.debug("User deleted succesfully for : " + userid);
             return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),DELETE_MESSAGE ),HttpStatus.OK);
-            } else {
-            	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
-            }
-    }
+         } else {
+         
+        	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
+         }
+    } /*END HERE*/
 
 }

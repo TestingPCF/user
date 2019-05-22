@@ -4,10 +4,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+
+/**
+ * @author Dinesh Sharma 
+ *
+ */
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	
+	/* THIS METHOD USE FOR
+	 * OF BY PASSING SECURITY
+	 * FOR CONFIG SERVER
+	 *  */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();

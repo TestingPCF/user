@@ -5,7 +5,7 @@ package com.hcl.cloud.user.service;
 
 import java.util.List;
 
-import com.hcl.cloud.user.DTO.UserDTO;
+import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.User;
 
 /**

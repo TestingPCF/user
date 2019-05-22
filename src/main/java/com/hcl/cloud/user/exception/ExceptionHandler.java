@@ -13,11 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import com.hcl.cloud.user.DTO.ExceptionResponseDTO;
 import com.hcl.cloud.user.constant.UserConstant;
+import com.hcl.cloud.user.dto.ExceptionResponseDTO;
 
 /**
- * com.hcl.cloud.user.exception abhishek_sin
+ * com.hcl.cloud.user.exception Dinesh Sharma
  */
 @ControllerAdvice
 @RefreshScope

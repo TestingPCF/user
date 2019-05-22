@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * @author abhishek_sin
+ * @author Dinesh Sharma
  *
  */
 @Entity
