@@ -25,7 +25,7 @@ import com.hcl.cloud.user.entity.User;
 import com.hcl.cloud.user.service.UserService;
 
 /**
- * @author Dinesh Sharma and abhishek_sin 
+ * @author Dinesh Sharma and abhishek_sin
  *
  */
 @RefreshScope
@@ -33,26 +33,25 @@ import com.hcl.cloud.user.service.UserService;
 public class UserController {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(UserController.class);
-    
+
     /**
      * DECLARATION OF VARIABLE.
      */
-    
+
     @Autowired
     public UserService userService;
-    
-    @Value("${user.create.successmsg}")
-    private  String MESSAGE;
-    
-    @Value("${user.update.successmsg}")
-    private  String UPDATE_MESSAGE;
-    
-    @Value("${user.delete.successmsg}")
-    private  String DELETE_MESSAGE;
-    
-    @Value("${user.notfound.msg}")
-    private  String UPDATE_MESSAGE_ERROR;
 
+    @Value("${user.create.successmsg}")
+    private String MESSAGE;
+
+    @Value("${user.update.successmsg}")
+    private String UPDATE_MESSAGE;
+
+    @Value("${user.delete.successmsg}")
+    private String DELETE_MESSAGE;
+
+    @Value("${user.notfound.msg}")
+    private String UPDATE_MESSAGE_ERROR;
 
     /**
      *
@@ -63,13 +62,14 @@ public class UserController {
      */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<UserResponseEntity> saveUserDetails(@RequestBody UserDTO user) {
-        
-    	if (logger.isInfoEnabled()) {
+
+        if (logger.isInfoEnabled()) {
             logger.info("User Request is received for Registration: ");
         }
         userService.saveUser(user);
-        return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(),MESSAGE ),HttpStatus.CREATED);
-    } /*END HERE*/
+        return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(), MESSAGE),
+                HttpStatus.CREATED);
+    } /* END HERE */
 
     /**
      * updateUserDetails method are updating user details.
@@ -81,19 +81,27 @@ public class UserController {
      */
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<UserResponseEntity> updateUserDetails(@RequestBody UserDTO user) {
-    	
-    	if (logger.isInfoEnabled()) {
-            logger.info("User Request is received for User Update :::::: "+user.getEmail());
+        if (logger.isInfoEnabled()) {
+            logger.info("User Request is received for User Update :::::: " + user.getEmail());
         }
-        User userUpdate  = userService.updateUser(user);
-        if (userUpdate!=null) {
-        
-        logger.debug("User detail updated succesfully for : " + userUpdate.getEmail());
-        return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),UPDATE_MESSAGE ),HttpStatus.OK);
-        } else {
-        	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
+        ResponseEntity<UserResponseEntity> response = null;
+        try {
+            User userUpdate = userService.updateUser(user);
+            if (userUpdate != null) {
+                logger.debug("User detail updated succesfully for : " + userUpdate.getEmail());
+                response = new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(), UPDATE_MESSAGE),
+                        HttpStatus.OK);
+            } else {
+                logger.error("UPDATE_MESSAGE_ERROR");
+                response = new ResponseEntity<>(
+                        new UserResponseEntity(HttpStatus.NOT_FOUND.value(), UPDATE_MESSAGE_ERROR),
+                        HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            logger.error("Error occured while updating user details. " + ex.getCause());
         }
-    } /*END HERE*/
+        return response;
+    } /* END HERE */
 
     /**
      * getAllUserDetails method are fetching all user details.
@@ -108,7 +116,7 @@ public class UserController {
 
         final List<UserDTO> userDetails = userService.findUserRoleByID(accessToken);
         return new ResponseEntity<>(userDetails, HttpStatus.OK);
-    } /*END HERE*/
+    } /* END HERE */
 
     /**
      * deleteUserDetailsByID method are soft deleting user details Change the user.
@@ -122,21 +130,28 @@ public class UserController {
     public ResponseEntity<UserResponseEntity> deleteUserDetailsByID(@PathVariable("userid") String userid,
             @RequestHeader(value = "accessToken", required = true) String accessToken) {
         String message = null;
-        
+        ResponseEntity<UserResponseEntity> response = null;
         if (logger.isInfoEnabled()) {
-            logger.info("User Request is received for User Update :::::: "+userid);
+            logger.info("User Request is received for User Update :::::: " + userid);
         }
-        
-        message = userService.deleteUser(userid);
-        
-        if (message!=null) {
-            
-            logger.debug("User deleted succesfully for : " + userid);
-            return new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(),DELETE_MESSAGE ),HttpStatus.OK);
-         } else {
-         
-        	 return new ResponseEntity<>(new UserResponseEntity(HttpStatus.NOT_FOUND.value(),UPDATE_MESSAGE_ERROR ),HttpStatus.NOT_FOUND);
-         }
-    } /*END HERE*/
+        try {
+            message = userService.deleteUser(userid);
+
+            if (message != null) {
+
+                logger.debug("User deleted succesfully for : " + userid);
+                response = new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(), DELETE_MESSAGE),
+                        HttpStatus.OK);
+            } else {
+
+                response = new ResponseEntity<>(
+                        new UserResponseEntity(HttpStatus.NOT_FOUND.value(), UPDATE_MESSAGE_ERROR),
+                        HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception ex) {
+            logger.error("Error occured while deleting user details. " + ex.getCause());
+        }
+        return response;
+    } /* END HERE */
 
 }

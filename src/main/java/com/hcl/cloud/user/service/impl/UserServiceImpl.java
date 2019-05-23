@@ -38,7 +38,7 @@ import com.hcl.cloud.user.repository.UserRepository;
 import com.hcl.cloud.user.service.UserService;;
 
 /**
- * @author Dinesh Sharma 
+ * @author Dinesh Sharma
  *
  */
 @Service
@@ -48,16 +48,16 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Value("user.uaa.endpoint")
     private String url;
-    
-    public void setUserRepository(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
 
-	ModelMapper mapper = null;
-  
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    ModelMapper mapper = null;
+
     /**
      *
      * @param user
@@ -69,10 +69,14 @@ public class UserServiceImpl implements UserService {
     public User saveUser(UserDTO userDTO) {
         User user = new User();
         if (userDTO != null) {
-            user = translateDTO(userDTO, user);
-            user = userRepository.save(user);
-            if(user!=null) {
-            	 LOG.info("User Registration successfully completed FOR  " + userDTO.getEmail());
+            try {
+                user = translateDTO(userDTO, user);
+                user = userRepository.save(user);
+                if (user != null) {
+                    LOG.info("User Registration successfully completed FOR  " + userDTO.getEmail());
+                }
+            } catch (Exception ex) {
+                LOG.error("Error Occured while Registering user. " + ex.getCause());
             }
         }
         return user;
@@ -120,7 +124,7 @@ public class UserServiceImpl implements UserService {
         user.setLoacked(userDTO.isLoacked());
         user.setRole(userDTO.getRole());
         final Set<Address> set = translateAddressDTO(userDTO.getUserAddress(), user);
-        BCryptPasswordEncoder passwordEncoder= new BCryptPasswordEncoder(12);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setUserAddress(set);
         return user;
@@ -216,10 +220,10 @@ public class UserServiceImpl implements UserService {
         final User user = userRepository.findByEmail(emailId);
         if (user != null) {
             userRepository.delete(user);
-            LOG.info("User deleted successfully for ::: "+emailId);
+            LOG.info("User deleted successfully for ::: " + emailId);
         } else {
-        	LOG.info("User not found for ::: "+emailId);
-        	return null;
+            LOG.info("User not found for ::: " + emailId);
+            return null;
         }
         return "delete successfully";
     } /* END HERE */
@@ -236,74 +240,70 @@ public class UserServiceImpl implements UserService {
         User user = null;
         List<User> userList = new ArrayList<>();
         List<UserDTO> dtos = null;
-        LOG.info("Request received for  accessToken:::::::: "+accessToken);
-        
+        LOG.info("Request received for  accessToken:::::::: " + accessToken);
+
         final String emailID = getUserIDFromAccessToken(accessToken);
         final String userRole = userRepository.findUserRoleById(emailID);
         if (UserConstant.ADMINROLE.equalsIgnoreCase(userRole)) {
             userList = userRepository.findAll();
             dtos = translateUserDetailsForOrder(userList);
-        } 
-         else if (UserConstant.USERROLE.equalsIgnoreCase(userRole)) {
+        } else if (UserConstant.USERROLE.equalsIgnoreCase(userRole)) {
             user = findUserDetailsByID(emailID);
             userList.add(user);
             dtos = translateUserDetailsForOrder(userList);
         }
         return dtos;
     } /* END HERE */
-    
-    
-    /**
-    *
-    * translateDTO
-    *
-    * @param userDTO
-    *            for translateDTO.
-    * @param user
-    *            for List.
-    * @return for user DTO.
-    */
-   public List<UserDTO> translateUserDetailsForOrder(List<User> users) {
-       LOG.debug("Enter translateDTO method: " + users);
-       final UserDTO dto = new UserDTO();
-       final List<UserDTO> userDTOs = new ArrayList<>();
-       for (final User user : users) {
-           dto.setUserName(user.getUserName());
-           dto.setEmail(user.getEmail());
-           dto.setFirstName(user.getFirstName());
-           dto.setLastName(user.getLastName());
-           dto.setPhoneNumber(user.getPhoneNumber());
-           dto.setUserAddress(translateAddress(user.getUserAddress()));
-           dto.setActive_user(user.isActive_user());
-           userDTOs.add(dto);
-       }
-       return userDTOs;
-   }
 
+    /**
+     *
+     * translateDTO
+     *
+     * @param userDTO
+     *            for translateDTO.
+     * @param user
+     *            for List.
+     * @return for user DTO.
+     */
+    public List<UserDTO> translateUserDetailsForOrder(List<User> users) {
+        LOG.debug("Enter translateDTO method: " + users);
+        final UserDTO dto = new UserDTO();
+        final List<UserDTO> userDTOs = new ArrayList<>();
+        for (final User user : users) {
+            dto.setUserName(user.getUserName());
+            dto.setEmail(user.getEmail());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setPhoneNumber(user.getPhoneNumber());
+            dto.setUserAddress(translateAddress(user.getUserAddress()));
+            dto.setActive_user(user.isActive_user());
+            userDTOs.add(dto);
+        }
+        return userDTOs;
+    }
 
     /**
      * getUserIDFromAccessToken
      */
     public String getUserIDFromAccessToken(String accessToken) {
-    	RestTemplate restTemplate = new RestTemplate();
-    	ResponseEntity<String> response =  null;
-    	TokenResponse userid = null;
-       try
-       {
-        LOG.info("Requesting user detail from UAA for :::::::: "+accessToken);
-        URI uri = new URI(url);
-        HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        requestHeaders.add("accessToken", accessToken);
-        HttpEntity<String> entity = new HttpEntity<String>(requestHeaders);
-         response= restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-         
-        LOG.info("Response received from UAA ::: "+response.getBody());
-        
-        userid = new ObjectMapper().readValue(response.getBody(), TokenResponse.class);
-       } catch (Exception e) {
-    	   LOG.info("Exception occure on calling of UAA ::: "+e.getCause());
-       }
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = null;
+        TokenResponse userid = null;
+        try {
+            LOG.info("Requesting user detail from UAA for :::::::: " + accessToken);
+            URI uri = new URI(url);
+            HttpHeaders requestHeaders = new HttpHeaders();
+            requestHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+            requestHeaders.add("accessToken", accessToken);
+            HttpEntity<String> entity = new HttpEntity<String>(requestHeaders);
+            response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+
+            LOG.info("Response received from UAA ::: " + response.getBody());
+
+            userid = new ObjectMapper().readValue(response.getBody(), TokenResponse.class);
+        } catch (Exception e) {
+            LOG.error("Exception occure on calling of UAA ::: " + e.getCause());
+        }
         return userid.getUserId();
 
     }
