@@ -64,7 +64,7 @@ public class UserController {
     public ResponseEntity<UserResponseEntity> saveUserDetails(@RequestBody UserDTO user) {
 
         if (logger.isInfoEnabled()) {
-            logger.info("User Request is received for Registration: ");
+            logger.debug("User Request is received for Registration: ");
         }
         userService.saveUser(user);
         return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(), MESSAGE),
@@ -82,7 +82,7 @@ public class UserController {
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<UserResponseEntity> updateUserDetails(@RequestBody UserDTO user) {
         if (logger.isInfoEnabled()) {
-            logger.info("User Request is received for User Update :::::: " + user.getEmail());
+            logger.debug("User Request is received for User Update :::::: " + user.getEmail());
         }
         ResponseEntity<UserResponseEntity> response = null;
         try {
@@ -132,7 +132,7 @@ public class UserController {
         String message = null;
         ResponseEntity<UserResponseEntity> response = null;
         if (logger.isInfoEnabled()) {
-            logger.info("User Request is received for User Update :::::: " + userid);
+            logger.debug("User Request is received for User Update :::::: " + userid);
         }
         try {
             message = userService.deleteUser(userid);

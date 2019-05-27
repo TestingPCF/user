@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
                 user = translateDTO(userDTO, user);
                 user = userRepository.save(user);
                 if (user != null) {
-                    LOG.info("User Registration successfully completed FOR  " + userDTO.getEmail());
+                    LOG.debug("User Registration successfully completed FOR  " + userDTO.getEmail());
                 }
             } catch (Exception ex) {
                 LOG.error("Error Occured while Registering user. " + ex.getCause());
@@ -220,9 +220,9 @@ public class UserServiceImpl implements UserService {
         final User user = userRepository.findByEmail(emailId);
         if (user != null) {
             userRepository.delete(user);
-            LOG.info("User deleted successfully for ::: " + emailId);
+            LOG.debug("User deleted successfully for ::: " + emailId);
         } else {
-            LOG.info("User not found for ::: " + emailId);
+            LOG.debug("User not found for ::: " + emailId);
             return null;
         }
         return "delete successfully";
