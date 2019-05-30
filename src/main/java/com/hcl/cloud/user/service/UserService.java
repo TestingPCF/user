@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.User;
+import com.hcl.cloud.user.exception.UserAlreadyExistException;
+import com.hcl.cloud.user.exception.UserNotFoundException;
 
 /**
  * @author abhishek_sin
@@ -32,7 +34,7 @@ public interface UserService {
      *            for save.
      * @return tag.
      */
-    User saveUser(UserDTO user);
+    User saveUser(UserDTO user)  throws UserAlreadyExistException;
 
     /**
      *
@@ -42,7 +44,7 @@ public interface UserService {
      *            for update
      * @return tag.
      */
-    User updateUser(UserDTO userDTO);
+    User updateUser(UserDTO userDTO) throws UserNotFoundException;
 
     /**
      *
@@ -52,7 +54,7 @@ public interface UserService {
      *            for delete.
      * @return tag.
      */
-    String deleteUser(String userId);
+    String deleteUser(String userId) throws UserNotFoundException;
 
     /**
      * findUserRoleByID.

@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hcl.cloud.user.constant.UserResponseEntity;
 import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.User;
+import com.hcl.cloud.user.exception.UserAlreadyExistException;
+import com.hcl.cloud.user.exception.UserNotFoundException;
 import com.hcl.cloud.user.service.UserService;
 
 /**
@@ -63,10 +65,21 @@ public class UserController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ResponseEntity<UserResponseEntity> saveUserDetails(@RequestBody UserDTO user) {
 
-        if (logger.isInfoEnabled()) {
+    	 ResponseEntity<UserResponseEntity> response = null;
+    	 
+        if (logger.isDebugEnabled()) {
             logger.debug("User Request is received for Registration: ");
         }
-        userService.saveUser(user);
+        
+        try {
+            userService.saveUser(user);
+        }
+        catch (UserAlreadyExistException ex) {
+       	 logger.debug("<<<<<<<<<USER NOT FOUND EXCEPTION FOR >>>>>>> " + user.getEmail());
+       	response = new ResponseEntity<>(
+                   new UserResponseEntity(HttpStatus.NOT_FOUND.value(), ex.getMessage()),
+                   HttpStatus.NOT_FOUND);
+       }
         return new ResponseEntity<UserResponseEntity>(new UserResponseEntity(HttpStatus.CREATED.value(), MESSAGE),
                 HttpStatus.CREATED);
     } /* END HERE */
@@ -81,7 +94,7 @@ public class UserController {
      */
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<UserResponseEntity> updateUserDetails(@RequestBody UserDTO user) {
-        if (logger.isInfoEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("User Request is received for User Update :::::: " + user.getEmail());
         }
         ResponseEntity<UserResponseEntity> response = null;
@@ -91,14 +104,12 @@ public class UserController {
                 logger.debug("User detail updated succesfully for : " + userUpdate.getEmail());
                 response = new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(), UPDATE_MESSAGE),
                         HttpStatus.OK);
-            } else {
-                logger.error("UPDATE_MESSAGE_ERROR");
-                response = new ResponseEntity<>(
-                        new UserResponseEntity(HttpStatus.NOT_FOUND.value(), UPDATE_MESSAGE_ERROR),
-                        HttpStatus.NOT_FOUND);
             }
-        } catch (Exception ex) {
-            logger.error("Error occured while updating user details. " + ex.getCause());
+        } catch (UserNotFoundException ex) {
+        	 logger.debug("<<<<<<<<<USER NOT FOUND EXCEPTION FOR >>>>>>> " + user.getEmail());
+        	response = new ResponseEntity<>(
+                    new UserResponseEntity(HttpStatus.NOT_FOUND.value(), ex.getMessage()),
+                    HttpStatus.NOT_FOUND);
         }
         return response;
     } /* END HERE */
@@ -131,7 +142,7 @@ public class UserController {
             @RequestHeader(value = "accessToken", required = true) String accessToken) {
         String message = null;
         ResponseEntity<UserResponseEntity> response = null;
-        if (logger.isInfoEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("User Request is received for User Update :::::: " + userid);
         }
         try {
@@ -142,14 +153,13 @@ public class UserController {
                 logger.debug("User deleted succesfully for : " + userid);
                 response = new ResponseEntity<>(new UserResponseEntity(HttpStatus.OK.value(), DELETE_MESSAGE),
                         HttpStatus.OK);
-            } else {
-
-                response = new ResponseEntity<>(
-                        new UserResponseEntity(HttpStatus.NOT_FOUND.value(), UPDATE_MESSAGE_ERROR),
-                        HttpStatus.NOT_FOUND);
+            
             }
         } catch (Exception ex) {
             logger.error("Error occured while deleting user details. " + ex.getCause());
+            response = new ResponseEntity<>(
+                    new UserResponseEntity(HttpStatus.NOT_FOUND.value(), UPDATE_MESSAGE_ERROR),
+                    HttpStatus.NOT_FOUND);
         }
         return response;
     } /* END HERE */

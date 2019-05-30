@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,8 @@ import com.hcl.cloud.user.dto.AddressDTO;
 import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.Address;
 import com.hcl.cloud.user.entity.User;
+import com.hcl.cloud.user.exception.UserAlreadyExistException;
+import com.hcl.cloud.user.exception.UserNotFoundException;
 import com.hcl.cloud.user.repository.UserRepository;
 import com.hcl.cloud.user.service.UserService;;
 
@@ -66,17 +69,18 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public User saveUser(UserDTO userDTO) {
+    public User saveUser(UserDTO userDTO) throws UserAlreadyExistException{
         User user = new User();
         if (userDTO != null) {
             try {
                 user = translateDTO(userDTO, user);
                 user = userRepository.save(user);
                 if (user != null) {
-                    LOG.debug("User Registration successfully completed FOR  " + userDTO.getEmail());
+                    LOG.debug("User Registration successfully completed for  " + userDTO.getEmail());
                 }
-            } catch (Exception ex) {
+            } catch (DataIntegrityViolationException ex) {
                 LOG.error("Error Occured while Registering user. " + ex.getCause());
+                throw new DataIntegrityViolationException("USER ALREADY EXIST");
             }
         }
         return user;
@@ -86,16 +90,25 @@ public class UserServiceImpl implements UserService {
      *
      * @param userDTO
      *            for update user.
+     * @throws UserNotFoundException 
      * @throws NotFoundException
      */
     @Override
     @Transactional
-    public User updateUser(UserDTO userDTO) {
+    public User updateUser(UserDTO userDTO) throws UserNotFoundException {
         User user = userRepository.findByEmail(userDTO.getEmail());
         if (user != null) {
-            LOG.debug("userDTO details: " + userDTO);
+        	
+            LOG.debug("INSIDE updateUser METHOD: " + userDTO.getEmail());
+            
             translateDTO(userDTO, user);
             user = userRepository.save(user);
+            
+            LOG.debug("User updated successfully for >>>>>>: " + userDTO.getEmail());
+            
+        } else {
+        	 LOG.debug("User does not  successfully for >>>>>>: " + userDTO.getEmail());
+        	throw new UserNotFoundException("USER NOT FOUND");
         }
         return user;
     } /* END HERE */
@@ -215,17 +228,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public String deleteUser(String emailId) {
+    public String deleteUser(String emailId) throws UserNotFoundException{
         LOG.info("Inside deleteUser method for : " + emailId);
         final User user = userRepository.findByEmail(emailId);
         if (user != null) {
+        	
             userRepository.delete(user);
             LOG.debug("User deleted successfully for ::: " + emailId);
+            
         } else {
             LOG.debug("User not found for ::: " + emailId);
-            return null;
+            throw new UserNotFoundException("USER NOT FOUND");
         }
-        return "delete successfully";
+        return UserConstant.USER_DELETED;
     } /* END HERE */
 
     /**

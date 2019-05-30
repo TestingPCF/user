@@ -18,6 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import com.hcl.cloud.user.constant.UserConstantTest;
 import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.User;
+import com.hcl.cloud.user.exception.UserAlreadyExistException;
+import com.hcl.cloud.user.exception.UserNotFoundException;
 import com.hcl.cloud.user.service.UserService;
 
 /**
@@ -68,7 +70,11 @@ public class UserControllerTest {
 	 */
 	@Test
 	public void saveUserDetailsTest() {
-		Mockito.when(userServiceMock.saveUser(userDTOMock)).thenReturn(userMock);
+		try {
+			Mockito.when(userServiceMock.saveUser(userDTOMock)).thenReturn(userMock);
+		} catch (UserAlreadyExistException e) {
+			e.printStackTrace();
+		}
 		//userControllerMock.saveUserDetails(userDTOMock, UserConstantTest.AUTHTOKEN);
 	}
 
@@ -86,7 +92,11 @@ public class UserControllerTest {
 	 */
 	@Test
 	public void deleteUserDetailsByIDTest() {
-		Mockito.when(userServiceMock.deleteUser(UserConstantTest.USERID)).thenReturn(null);
+		try {
+			Mockito.when(userServiceMock.deleteUser(UserConstantTest.USERID)).thenReturn(null);
+		} catch (UserNotFoundException e) {
+			e.printStackTrace();
+		}
 		userControllerMock.deleteUserDetailsByID(UserConstantTest.USERID, UserConstantTest.AUTHTOKEN);
 	}
 

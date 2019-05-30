@@ -21,6 +21,10 @@ public class UserConstant {
      * USER_ROLE.
      */
     public final static String USERROLE = "user";
+    
+    public final static String USER_DELETED = "USER DELETED";
+    
+    
    
     UserConstant() { }
 }

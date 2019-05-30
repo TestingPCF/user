@@ -23,6 +23,8 @@ import com.hcl.cloud.user.dto.AddressDTO;
 import com.hcl.cloud.user.dto.UserDTO;
 import com.hcl.cloud.user.entity.Address;
 import com.hcl.cloud.user.entity.User;
+import com.hcl.cloud.user.exception.UserAlreadyExistException;
+import com.hcl.cloud.user.exception.UserNotFoundException;
 import com.hcl.cloud.user.repository.UserRepository;
 import com.hcl.cloud.user.service.impl.UserServiceImpl;
 import junit.framework.Assert;
@@ -108,7 +110,12 @@ public class UserServiceImplTest {
 	UserRepository userRepository = Mockito.mock(UserRepository.class);
 	userServiceImpl.setUserRepository(userRepository);
 	Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-	User returnUser = userServiceImpl.saveUser(userDTO1 );
+	User returnUser = null;
+	try {
+		returnUser = userServiceImpl.saveUser(userDTO1 );
+	} catch (UserAlreadyExistException e) {
+		e.printStackTrace();
+	}
 	Assert.assertEquals(returnUser.getEmail(), user.getEmail());
 	}
 
@@ -148,7 +155,13 @@ public class UserServiceImplTest {
 		userServiceImpl.setUserRepository(userRepository);
 		Mockito.when(userRepository.findByEmail(Mockito.any(String.class))).thenReturn(user);
 		Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
-		User returnUser = userServiceImpl.updateUser(userDTO);
+		User returnUser = null;
+		try {
+			returnUser = userServiceImpl.updateUser(userDTO);
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Assert.assertEquals(returnUser.getEmail(), user.getEmail());
 	}
 
@@ -164,7 +177,12 @@ public class UserServiceImplTest {
 		UserRepository userRepository = Mockito.mock(UserRepository.class);
 		userServiceImpl.setUserRepository(userRepository);
 		Mockito.when(userRepository.findByEmail(UserConstantTest.USERNAME)).thenReturn(user);
-		userServiceImpl.deleteUser(UserConstantTest.USERNAME);
+		try {
+			userServiceImpl.deleteUser(UserConstantTest.USERNAME);
+		} catch (UserNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 

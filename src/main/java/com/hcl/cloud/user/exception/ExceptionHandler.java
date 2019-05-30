@@ -45,6 +45,14 @@ public class ExceptionHandler {
         	 exceptionResponse.setCode(HttpStatus.BAD_REQUEST.value());
              exceptionResponse.setDescription(ERROR_MESSAGE);
         } 
+        else if(exception instanceof  UserNotFoundException) {
+       	 	exceptionResponse.setCode(((UserNotFoundException) exception).getStatus());
+            exceptionResponse.setDescription(((UserNotFoundException) exception).getMessage());
+       }
+        else if(exception instanceof  UserAlreadyExistException) {
+       	 	exceptionResponse.setCode(((UserNotFoundException) exception).getStatus());
+            exceptionResponse.setDescription(((UserNotFoundException) exception).getMessage());
+       }
         else {
         exceptionResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         exceptionResponse.setDescription(exception.getMessage());
