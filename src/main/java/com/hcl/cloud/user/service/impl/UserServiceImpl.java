@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Value("user.uaa.endpoint")
+    
+    @Value("${user.uaa.endpoint}")
     private String url;
 
     public void setUserRepository(UserRepository userRepository) {
