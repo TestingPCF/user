@@ -306,6 +306,7 @@ public class UserServiceImpl implements UserService {
         TokenResponse userid = null;
         try {
             LOG.info("Requesting user detail from UAA for :::::::: " + accessToken);
+            LOG.info("Using the url of UAA =>>>>>>>> " + url);
             URI uri = new URI(url);
             HttpHeaders requestHeaders = new HttpHeaders();
             requestHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
